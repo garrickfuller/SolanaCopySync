@@ -14,7 +14,7 @@ def get_wallet_pnl(wallet):
     #Get PNL of a wallet through Solana Tracker API
     url = f"https://data.solanatracker.io/pnl/{wallet}?showHistoricPnL=true"
     try:
-        response = requests.get(url, headers=HEADERS, timeout=10, retires=2)
+        response = requests.get(url, headers=HEADERS, timeout=30)
         if response.status_code == 200:
             data = response.json()
             summary = data.get("summary", {})
@@ -22,7 +22,7 @@ def get_wallet_pnl(wallet):
             totalInvested = summary.get("totalInvested")
             totalWins = summary.get("totalWins")
             avgBuyValue = summary.get("averageBuyAmount")
-
+            #sometimes API doesn't send one of these values, I just ignore that wallet if it does this.
             if total is None or totalInvested is None or totalWins is None or avgBuyValue is None:
                 print(" Unknown Error in API response.")
                 return None
@@ -74,7 +74,7 @@ def main():
                     "avgBuyValue": f"{avgBuyValue:.2f}"
                 })
             # limit is 1 per second, I got rate limited at that though.
-            time.sleep(5)
+            time.sleep(3)
     
     print(f"\nFound {len(profitable_wallets)} profitable wallet(s) meeting all criteria.")
     

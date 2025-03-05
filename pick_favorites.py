@@ -3,7 +3,7 @@ from math import sqrt
 import requests
 
 #CONFIG
-DISCORD_WEBHOOK_URL = ""
+DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1271493141333016606/Zr8HKtxEBNMxpoFJzqXH2J0pJDqtA-VEpv9TMgpdPRU2D1OLvNipRDJ1RPxwBHuq2ILO"
 
 def compute_score(total, totalInvested, totalWins, avgBuyValue):
     '''
@@ -14,13 +14,13 @@ def compute_score(total, totalInvested, totalWins, avgBuyValue):
     roi = (total / totalInvested) * 100 
     score = 0
     if roi >= 15:
-        score = score + 1
+        score += 1
   
     if totalWins >= 100:
-        score = score + 1
+        score += 1
     
     if avgBuyValue >= 100:
-        score = score + 1
+        score +=1
 
 
     """
@@ -33,7 +33,7 @@ def compute_score(total, totalInvested, totalWins, avgBuyValue):
  
     math_score = (0.5 * roi) + (10 * sqrt(totalWins))
     if avgBuyValue >= 200:
-        score += 2
+        math_score += 20
     return score, math_score, roi
    
 
@@ -100,11 +100,14 @@ def main():
     
     # Build the message for Discord
 
-    # Section 1: List all wallets with their 3/3 score
-    message = "**3/3 Scores for All Wallets:**\n"
-    for wallet in wallets:
+    # Section 1: List only wallets with a perfect 3/3 score
+    message = "**3/3 Scores for Perfect Wallets:**\n"
+    perfect_wallets = [wallet for wallet in wallets if wallet["score"] == 3]
+    for wallet in perfect_wallets:
         wallet_address = wallet.get("wallet", "N/A")
-        message += f"Wallet: `{wallet_address}`, 3/3 Score: `{wallet['score']}`\n"
+    message += f"Wallet: `{wallet_address}`, 3/3 Score: `{wallet['score']}`\n"
+
+
     
     # Section 2: List top 5 wallets by mathematical score
     top_5_math = sorted(wallets, key=lambda x: x["math_score"], reverse=True)[:5]
