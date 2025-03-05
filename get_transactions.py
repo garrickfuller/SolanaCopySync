@@ -74,7 +74,7 @@ def main():
                     "avgBuyValue": f"{avgBuyValue:.2f}"
                 })
             # limit is 1 per second, I got rate limited at that though.
-            time.sleep(15)
+            time.sleep(5)
     
     print(f"\nFound {len(profitable_wallets)} profitable wallet(s) meeting all criteria.")
     
